@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Hasan Deeb\LaravelEventTracker\LaravelEventTracker
  */
-class LaravelEventTracker extends Facade
+class EventTracker extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Aldeebhasan\LaravelEventTracker\LaravelEventTracker::class;
+        return \Aldeebhasan\LaravelEventTracker\EventTracker::class;
     }
 }

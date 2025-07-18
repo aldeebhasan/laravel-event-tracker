@@ -2,6 +2,6 @@
 
 namespace Aldeebhasan\LaravelEventTracker;
 
-class LaravelEventTracker
+class EventTracker
 {
 }

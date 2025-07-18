@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class LaravelEventTrackerCommand extends Command
 {
-    public $signature = 'laravel-event-tracker';
+    public $signature = 'tracker';
     public $description = 'My command';
 
     public function handle(): int

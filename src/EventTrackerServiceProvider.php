@@ -2,11 +2,9 @@
 
 namespace Aldeebhasan\LaravelEventTracker;
 
-use Aldeebhasan\LaravelEventTracker\Commands\LaravelEventTrackerCommand;
 use Carbon\Laravel\ServiceProvider;
-use Spatie\LaravelPackageTools\Package;
 
-class LaravelEventTrackerServiceProvider extends ServiceProvider
+class EventTrackerServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
@@ -27,6 +25,9 @@ class LaravelEventTrackerServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'event-tracker');
-        $this->loadRoutesFrom(__DIR__ . '/../src/Http/Routes/web.php');
+//        $this->loadRoutesFrom(__DIR__ . '/../src/Http/Routes/web.php');
+        $this->commands([
+
+        ]);
     }
 }

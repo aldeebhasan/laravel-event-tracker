@@ -60,10 +60,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Aldeebhasan\\LaravelEventTracker\\LaravelEventTrackerServiceProvider"
+                "EventTrackerServiceProvider"
             ],
             "aliases": {
-                "LaravelEventTracker": "Aldeebhasan\\LaravelEventTracker\\Facades\\LaravelEventTracker"
+                "EventTracker": "Aldeebhasan\\LaravelEventTracker\\Facades\\EventTracker"
             }
         }
     },

@@ -2,7 +2,7 @@
 
 namespace Aldeebhasan\LaravelEventTracker\Tests;
 
-use Aldeebhasan\LaravelEventTracker\LaravelEventTrackerServiceProvider;
+use Aldeebhasan\LaravelEventTracker\EventTrackerServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -20,7 +20,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            LaravelEventTrackerServiceProvider::class,
+            EventTrackerServiceProvider::class,
         ];
     }
 
