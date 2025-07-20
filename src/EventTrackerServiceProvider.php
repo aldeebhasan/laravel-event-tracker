@@ -25,7 +25,7 @@ class EventTrackerServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'event-tracker');
-//        $this->loadRoutesFrom(__DIR__ . '/../src/Http/Routes/web.php');
+        //        $this->loadRoutesFrom(__DIR__ . '/../src/Http/Routes/web.php');
         $this->commands([
 
         ]);

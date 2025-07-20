@@ -40,7 +40,10 @@
         "psr-4": {
             "Aldeebhasan\\LaravelEventTracker\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
-        }
+        },
+        "files": [
+            "src/Helper/helper.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
