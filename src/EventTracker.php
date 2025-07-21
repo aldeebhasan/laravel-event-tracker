@@ -5,27 +5,36 @@ namespace Aldeebhasan\LaravelEventTracker;
 use Aldeebhasan\LaravelEventTracker\Contracts\ResolveUI;
 use Aldeebhasan\LaravelEventTracker\Contracts\TrackerUI;
 use Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException;
-use Aldeebhasan\LaravelEventTracker\Trackers\LogTracker;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 class EventTracker
 {
-    private ?TrackerUI $tracker;
+    private ?TrackerUI $tracker = null;
+    /**
+     * @var array<string,mixed> $preloadedResolverData
+     */
     private array $preloadedResolverData = [];
 
+    /**
+     * @return  array<string,mixed>
+     */
     public function getPreloadedResolverData(): array
     {
         return $this->preloadedResolverData;
     }
 
+    /**
+     * @throws TrackingException
+     */
     public function tracker(string $className = ''): self
     {
         $className = $className ?: config('event-tracker.tracker');
 
-        if (!class_exists($className)) {
-            $className = LogTracker::class;
+        if (!class_exists($className) || !is_subclass_of($className, TrackerUI::class)) {
+            throw new TrackingException('Invalid Tracker implementation');
         }
+
         $this->tracker = new $className;
         $this->preloadResolverData();
 
@@ -39,6 +48,10 @@ class EventTracker
         return $this;
     }
 
+    /**
+     * @param array<string,mixed> $context
+     * @throws TrackingException
+     */
     public function track(string $event, array $context = []): void
     {
         $enabled = config('event-tracker.enabled', false);
@@ -53,6 +66,9 @@ class EventTracker
         $this->tracker->track($event, $context);
     }
 
+    /**
+     * @throws TrackingException
+     */
     public function preloadResolverData(): self
     {
         $this->preloadedResolverData = $this->runResolvers();
@@ -65,6 +81,9 @@ class EventTracker
         return $this;
     }
 
+    /**
+     * @throws TrackingException
+     */
     protected function resolveUser(): mixed
     {
         if (!empty($this->preloadedResolverData['user'] ?? null)) {
@@ -80,6 +99,10 @@ class EventTracker
         return call_user_func([$userResolver, 'resolve'], $this);
     }
 
+    /**
+     * @return array<string,mixed>
+     * @throws TrackingException
+     */
     private function runResolvers(): array
     {
         $resolved = [];
