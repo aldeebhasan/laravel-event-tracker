@@ -6,7 +6,6 @@ use Aldeebhasan\LaravelEventTracker\Contracts\TrackerUI;
 
 class LogTracker implements TrackerUI
 {
-
     /**
      * @param array<string,mixed> $context
      */

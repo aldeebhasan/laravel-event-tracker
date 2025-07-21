@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 class EventTracker
 {
     private ?TrackerUI $tracker = null;
+
     /**
-     * @var array<string,mixed> $preloadedResolverData
+     * @var array<string,mixed>
      */
     private array $preloadedResolverData = [];
 
     /**
-     * @return  array<string,mixed>
+     * @return array<string,mixed>
      */
     public function getPreloadedResolverData(): array
     {
@@ -50,6 +51,7 @@ class EventTracker
 
     /**
      * @param array<string,mixed> $context
+     *
      * @throws TrackingException
      */
     public function track(string $event, array $context = []): void
@@ -69,7 +71,7 @@ class EventTracker
     /**
      * @throws TrackingException
      */
-    public function preloadResolverData(): self
+    private function preloadResolverData(): void
     {
         $this->preloadedResolverData = $this->runResolvers();
 
@@ -77,14 +79,12 @@ class EventTracker
         if (!empty($user)) {
             $this->preloadedResolverData['user'] = $user;
         }
-
-        return $this;
     }
 
     /**
      * @throws TrackingException
      */
-    protected function resolveUser(): mixed
+    private function resolveUser(): mixed
     {
         if (!empty($this->preloadedResolverData['user'] ?? null)) {
             return $this->preloadedResolverData['user'];
@@ -101,6 +101,7 @@ class EventTracker
 
     /**
      * @return array<string,mixed>
+     *
      * @throws TrackingException
      */
     private function runResolvers(): array

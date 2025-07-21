@@ -2,9 +2,15 @@
 
 namespace Aldeebhasan\LaravelEventTracker\Facades;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @method static \Aldeebhasan\LaravelEventTracker\EventTracker tracker(string $className = '')
+ * @method static \Aldeebhasan\LaravelEventTracker\EventTracker user(Authenticatable|Model $user)
+ * @method static void track(string $event, array $context = [])
+ *
  * @see \Aldeebhasan\LaravelEventTracker\LaravelEventTracker
  */
 class EventTracker extends Facade
