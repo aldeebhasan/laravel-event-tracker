@@ -1,8 +1,15 @@
 <?php
 
 if (!function_exists('tracker')) {
-    function tracker(string $event): mixed
+    function tracker(string $driver = ''): Aldeebhasan\LaravelEventTracker\EventTracker
     {
-        return null;
+        return Aldeebhasan\LaravelEventTracker\Facades\EventTracker::tracker($driver);
+    }
+}
+
+if (!function_exists('track')) {
+    function track(string $event, array $context = []): void
+    {
+        tracker()->track($event, $context);
     }
 }

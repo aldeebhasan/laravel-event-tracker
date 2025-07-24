@@ -3,7 +3,20 @@
 // config for Hasan Deeb/LaravelEventTracker
 return [
     'enabled' => env('TRACKING_ENABLED', false),
-    'tracker' => Aldeebhasan\LaravelEventTracker\Trackers\LogTracker::class,
+
+    'implementation' => Aldeebhasan\LaravelEventTracker\Models\EventTracker::class,
+
+    'driver' => 'log',
+    'drivers' => [
+        'log' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/packages/event-tracker/events.log'),
+        ],
+        'database' => [
+            'table' => 'events',
+            'connection' => 'mysql',
+        ],
+    ],
 
     'user' => [
         'morph_prefix' => 'user',

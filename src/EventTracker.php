@@ -5,6 +5,8 @@ namespace Aldeebhasan\LaravelEventTracker;
 use Aldeebhasan\LaravelEventTracker\Contracts\ResolveUI;
 use Aldeebhasan\LaravelEventTracker\Contracts\TrackerUI;
 use Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException;
+use Aldeebhasan\LaravelEventTracker\Trackers\DatabaseTracker;
+use Aldeebhasan\LaravelEventTracker\Trackers\LogTracker;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,15 +30,12 @@ class EventTracker
     /**
      * @throws TrackingException
      */
-    public function tracker(string $className = ''): self
+    public function tracker(string $driver = ''): self
     {
-        $className = $className ?: config('event-tracker.tracker');
+        $driver = $driver ?: config('event-tracker.driver');
 
-        if (!class_exists($className) || !is_subclass_of($className, TrackerUI::class)) {
-            throw new TrackingException('Invalid Tracker implementation');
-        }
+        $this->tracker = $this->getTrackerImplementation($driver);
 
-        $this->tracker = new $className;
         $this->preloadResolverData();
 
         return $this;
@@ -65,7 +64,7 @@ class EventTracker
             $this->tracker();
         }
 
-        $this->tracker->track($event, $context);
+        $this->tracker->track($this->getPreloadedResolverData(), $event, $context);
     }
 
     /**
@@ -121,5 +120,21 @@ class EventTracker
         }
 
         return $resolved;
+    }
+
+    private function getTrackerImplementation(string $driver): TrackerUI
+    {
+        $config = config('event-tracker.drivers.' . $driver);
+        if (!$config) {
+            throw new TrackingException('Invalid Tracker implementation');
+        }
+
+        $className = match ($driver) {
+            'log' => LogTracker::class,
+            'database' => DatabaseTracker::class,
+            default => throw new TrackingException('Unknown database driver: ' . $driver),
+        };
+
+        return (new $className)->initialize($config);
     }
 }

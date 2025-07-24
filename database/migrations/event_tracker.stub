@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        $connection = config('event-tracker.drivers.database.connection', config('database.default'));
+        $table = config('event-tracker.drivers.database.table', 'events');
+
+        Schema::connection($connection)->create($table, function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('event');
+            $table->text('context');
+            $table->nullableMorphs('trackable');
+            $table->ipAddress()->nullable();
+            $table->string('user_agent', 1023)->nullable();
+            $table->string('tags')->nullable();
+            $table->timestamps();
+        });
+    }
+
+
+    public function down(): void
+    {
+        $connection = config('event-tracker.drivers.database.connection', config('database.default'));
+        $table = config('event-tracker.drivers.database.table', 'events');
+
+        Schema::connection($connection)->drop($table);
+    }
+};

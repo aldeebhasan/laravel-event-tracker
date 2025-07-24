@@ -10,22 +10,19 @@ class EventTrackerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/event-tracker.php' => config_path('event-tracker.php'),
-        ], 'tracker-config');
+        ], 'config');
 
         $this->publishes([
-            __DIR__ . '/../database/migrations' => database_path("migrations"),
-        ], 'tracker-migrations');
+            __DIR__ . '/../database/migrations/event_tracker.stub' => database_path(
+                sprintf('migrations/%s_create_event_tracker_table.php', date('Y_m_d_His'))
+            ),
+        ], 'migrations');
 
-        $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/event-tracker'),
-        ], 'tracker-views');
+        $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
     }
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'event-tracker');
-        //        $this->loadRoutesFrom(__DIR__ . '/../src/Http/Routes/web.php');
         $this->commands([
 
         ]);
