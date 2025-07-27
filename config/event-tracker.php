@@ -26,4 +26,11 @@ return [
         'ip_address' => Aldeebhasan\LaravelEventTracker\Resolvers\IpAddressResolver::class,
         'user_agent' => Aldeebhasan\LaravelEventTracker\Resolvers\UserAgentResolver::class,
     ],
+
+    'queue' => [
+        'enabled' => false,
+        'connection' => env('QUEUE_DRIVER', 'sync'),
+        'queue' => 'default',
+        'delay' => 0,
+    ],
 ];

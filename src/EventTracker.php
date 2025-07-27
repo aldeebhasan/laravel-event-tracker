@@ -3,40 +3,32 @@
 namespace Aldeebhasan\LaravelEventTracker;
 
 use Aldeebhasan\LaravelEventTracker\Contracts\ResolveUI;
-use Aldeebhasan\LaravelEventTracker\Contracts\TrackerUI;
 use Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException;
-use Aldeebhasan\LaravelEventTracker\Trackers\DatabaseTracker;
-use Aldeebhasan\LaravelEventTracker\Trackers\LogTracker;
+use Aldeebhasan\LaravelEventTracker\Factories\EventTrackerDriverFactory;
+use Aldeebhasan\LaravelEventTracker\Jobs\EventTrackerJob;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 class EventTracker
 {
-    private ?TrackerUI $tracker = null;
+    private string $driver;
 
     /**
      * @var array<string,mixed>
      */
-    private array $preloadedResolverData = [];
+    public array $preloadedResolverData = [];
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function getPreloadedResolverData(): array
+    public function __construct()
     {
-        return $this->preloadedResolverData;
+        $this->driver = config('event-tracker.driver');
     }
 
     /**
      * @throws TrackingException
      */
-    public function tracker(string $driver = ''): self
+    public function driver(string $driver = ''): self
     {
-        $driver = $driver ?: config('event-tracker.driver');
-
-        $this->tracker = $this->getTrackerImplementation($driver);
-
-        $this->preloadResolverData();
+        $this->driver = $driver ?: config('event-tracker.driver');
 
         return $this;
     }
@@ -60,11 +52,14 @@ class EventTracker
             return;
         }
 
-        if (!$this->tracker) {
-            $this->tracker();
-        }
+        $this->preloadResolverData();
 
-        $this->tracker->track($this->getPreloadedResolverData(), $event, $context);
+        if (config('event-tracker.queue.enabled', false)) {
+            dispatch(new EventTrackerJob($this->driver, $this->preloadedResolverData, $event, $context));
+        } else {
+            $tracker = (new EventTrackerDriverFactory)->getInstance($this->driver);
+            $tracker->track($this->preloadedResolverData, $event, $context);
+        }
     }
 
     /**
@@ -120,21 +115,5 @@ class EventTracker
         }
 
         return $resolved;
-    }
-
-    private function getTrackerImplementation(string $driver): TrackerUI
-    {
-        $config = config('event-tracker.drivers.' . $driver);
-        if (!$config) {
-            throw new TrackingException('Invalid Tracker implementation');
-        }
-
-        $className = match ($driver) {
-            'log' => LogTracker::class,
-            'database' => DatabaseTracker::class,
-            default => throw new TrackingException('Unknown database driver: ' . $driver),
-        };
-
-        return (new $className)->initialize($config);
     }
 }

@@ -9,6 +9,6 @@ class UserAgentResolver implements ResolveUI
 {
     public static function resolve(EventTracker $tracker): string
     {
-        return $tracker->getPreloadedResolverData()['user_agent'] ?? (request()->userAgent() ?? '');
+        return $tracker->preloadedResolverData['user_agent'] ?? (request()->userAgent() ?? '');
     }
 }

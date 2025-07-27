@@ -16,7 +16,10 @@ class LogTracker implements TrackerUI
         $formattedContext = implode(', ', array_map(fn($key, $value) => "$key: $value", array_keys($context), array_values($context)));
         $formattedMeta = $this->getMeta($meta);
 
-        $message = '[' . now() . '] ' . $event . " ( $formattedContext ) : $formattedMeta";
+        $message = sprintf(
+            "[%s] Event:[%s], Context:[%s], Meta:[%s]",
+            now(), $event, $formattedContext, $formattedMeta
+        );
 
         $this->channel->info($message);
     }

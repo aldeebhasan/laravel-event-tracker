@@ -3,12 +3,22 @@
 namespace Aldeebhasan\LaravelEventTracker\Trackers;
 
 use Aldeebhasan\LaravelEventTracker\Contracts\TrackerUI;
+use Aldeebhasan\LaravelEventTracker\Models\EventTracker;
 
 class DatabaseTracker implements TrackerUI
 {
     public function track(array $meta, string $event, array $context = []): void
     {
-        // TODO: Implement track() method.
+        $data = [
+            'event' => $event,
+            'context' => $context,
+            'ip_address' => $meta['ip_address'] ?? '0.0.0.0',
+            'user_agent' => $meta['user_agent'] ?? '',
+            'trackable_type' => !empty($meta['user']) ? get_class($meta['user']) : null,
+            'trackable_id' => !empty($meta['user']) ? $meta['user']->getKey() : null,
+            'tags' => '',
+        ];
+        EventTracker::create($data);
     }
 
     public function initialize(array $config): TrackerUI

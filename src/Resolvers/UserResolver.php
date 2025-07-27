@@ -11,6 +11,6 @@ class UserResolver implements ResolveUI
 {
     public static function resolve(EventTracker $tracker): Authenticatable|Model|null
     {
-        return auth()->user();
+        return $tracker->preloadedResolverData['user'] ?? auth()->user();
     }
 }

@@ -18,11 +18,11 @@ class EventTrackerServiceProvider extends ServiceProvider
             ),
         ], 'migrations');
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
     }
 
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
         $this->commands([
 
         ]);

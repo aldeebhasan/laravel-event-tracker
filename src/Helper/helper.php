@@ -3,7 +3,7 @@
 if (!function_exists('tracker')) {
     function tracker(string $driver = ''): Aldeebhasan\LaravelEventTracker\EventTracker
     {
-        return Aldeebhasan\LaravelEventTracker\Facades\EventTracker::tracker($driver);
+        return Aldeebhasan\LaravelEventTracker\Facades\EventTracker::driver($driver);
     }
 }
 
