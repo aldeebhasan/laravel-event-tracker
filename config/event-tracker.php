@@ -16,6 +16,14 @@ return [
             'table' => 'events',
             'connection' => 'mysql',
         ],
+        /*
+         'custom' => [
+            'implementation' => YourProject\Trackers\CustomTracker::class,
+            'api-key' => 'events',
+            'project' => 'tracker',
+        ],
+        */
+
     ],
 
     'user' => [
