@@ -24,6 +24,6 @@ class EventTracker extends Model
 
     public function getTable(): string
     {
-        return config('event-tracker.drivers.database.table');
+        return config('event-tracker.drivers.database.table', 'events');
     }
 }

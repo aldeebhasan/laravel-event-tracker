@@ -17,7 +17,6 @@ class EventTrackerServiceProvider extends ServiceProvider
                 sprintf('migrations/%s_create_event_tracker_table.php', date('Y_m_d_His'))
             ),
         ], 'migrations');
-
     }
 
     public function register(): void
