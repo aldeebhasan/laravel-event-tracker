@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\LaravelEventTracker;
 
+use Aldeebhasan\LaravelEventTracker\Commands\StatisticCommand;
 use Carbon\Laravel\ServiceProvider;
 
 class EventTrackerServiceProvider extends ServiceProvider
@@ -10,20 +11,22 @@ class EventTrackerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/event-tracker.php' => config_path('event-tracker.php'),
-        ], 'config');
+        ], 'tracker-config');
 
         $this->publishes([
             __DIR__ . '/../database/migrations/event_tracker.stub' => database_path(
                 sprintf('migrations/%s_create_event_tracker_table.php', date('Y_m_d_His'))
             ),
-        ], 'migrations');
+        ], 'tracker-migrations');
     }
 
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
-        $this->commands([
-
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                StatisticCommand::class
+            ]);
+        }
     }
 }

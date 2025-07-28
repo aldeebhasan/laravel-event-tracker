@@ -11,6 +11,7 @@ class DatabaseTracker implements TrackerUI
     {
         $data = [
             'event' => $event,
+            'date' => now()->toDateString(),
             'context' => $context,
             'ip_address' => $meta['ip_address'] ?? '0.0.0.0',
             'user_agent' => $meta['user_agent'] ?? '',
@@ -24,5 +25,11 @@ class DatabaseTracker implements TrackerUI
     public function initialize(array $config): TrackerUI
     {
         return new self;
+    }
+
+    public function statistic(?string $event, ?string $from, ?string $to): array
+    {
+
+        return [];
     }
 }

@@ -13,37 +13,34 @@ class LogTracker implements TrackerUI
 
     public function track(array $meta, string $event, array $context = []): void
     {
-        $formattedContext = implode(', ', array_map(fn($key, $value) => "$key: $value", array_keys($context), array_values($context)));
-        $formattedMeta = $this->getMeta($meta);
-
         $message = sprintf(
-            "Event:[%s], Context:[%s], Meta:[%s]",
-            $event, $formattedContext, $formattedMeta
+            "Event:[%s], Context:%s, Meta:%s",
+            $event,
+            json_encode($context, JSON_UNESCAPED_UNICODE),
+            json_encode($this->getMeta($meta), JSON_UNESCAPED_UNICODE),
         );
 
         $this->channel->info($message);
     }
 
-    private function getMeta(array $meta): string
+    private function getMeta(array $meta): array
     {
         $formattedMeta = [];
-        if (!empty($meta['user'])) {
-            $user = $meta['user'];
-            $formattedMeta[] = "user: ($user->id, $user->name)";
-        }
+
         foreach ($meta as $key => $value) {
             if (empty($value)) {
                 continue;
             }
 
             if ($key === 'user') {
-                $formattedMeta[] = "user: ($value->id, $value->name)";
+                $formattedMeta['user_id'] = (string)$value->getKey();
+                $formattedMeta['user_name'] = (string)$value->name;
             } else {
-                $formattedMeta[] = "$key: $value";
+                $formattedMeta[$key] = (string)$value;
             }
         }
 
-        return implode(', ', $formattedMeta);
+        return $formattedMeta;
     }
 
     public function initialize(array $config): TrackerUI
@@ -62,5 +59,10 @@ class LogTracker implements TrackerUI
         ]);
 
         return $this;
+    }
+
+    public function statistic(?string $event, ?string $from, ?string $to): array
+    {
+        throw new TrackingException("Statistic are not supported for log tracker right now!!");
     }
 }
