@@ -15,6 +15,7 @@ class EventTracker
     use Conditionable;
 
     private string $driver;
+    private Authenticatable|Model|null $user = null;
 
     /**
      * @var array<string,mixed>
@@ -38,7 +39,7 @@ class EventTracker
 
     public function user(Authenticatable|Model $user): self
     {
-        $this->preloadedResolverData['user'] = $user;
+        $this->user = $user;
 
         return $this;
     }
@@ -85,6 +86,10 @@ class EventTracker
     {
         if (!empty($this->preloadedResolverData['user'] ?? null)) {
             return $this->preloadedResolverData['user'];
+        }
+
+        if (!empty($this->user)) {
+            return $this->user;
         }
 
         $userResolver = config('event-tracker.user.resolver');

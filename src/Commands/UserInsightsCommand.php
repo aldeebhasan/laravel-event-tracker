@@ -34,16 +34,20 @@ class UserInsightsCommand extends Command
         $this->output->title($results['title']);
         $this->output->text("Generated at:  {$results['generated_at']} ");
         $this->output->text("Between : {$results['period']['start']} & {$results['period']['end']}");
-        $this->output->section("Top 3 events");
+        $this->output->section("Top 3 users");
         $this->table(
-            ["Event", 'Count'],
+            ["User", 'Event count'],
             array_map(fn($value, $key) => [$key, $value], $results['data']['top_3_users'], array_keys($results['data']['top_3_users'])),
         );
 
         $this->output->section("User Insights");
         $this->table(
-            ["Day", 'Events'],
-            array_map(fn($value, $key) => [$key, implode('\n', $value)], $results['data']['by_days'], array_keys($results['data']['by_days'])),
+            ["Day", 'Users'],
+            array_map(
+                fn($key, $value) => [$key, collect($value)->map(fn($val, $key) => "$key: $val")->implode(', ')],
+                array_keys($results['data']['by_days']),
+                $results['data']['by_days']
+            ),
         );
 
         return self::SUCCESS;
