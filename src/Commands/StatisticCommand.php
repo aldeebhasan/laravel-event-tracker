@@ -33,8 +33,8 @@ class StatisticCommand extends Command
         }
 
         $this->output->title($results['title']);
-        $this->output->info("Generated at:  {$results['generated_at']} ");
-        $this->output->info("Between : {$results['period']['start']} & {$results['period']['end']}");
+        $this->output->text("Generated at:  {$results['generated_at']} ");
+        $this->output->text("Between : {$results['period']['start']} & {$results['period']['end']}");
         $this->table(
             ["Key", 'Count'],
             array_map(fn($value, $key) => [str($key)->title(), $value], $results['data'], array_keys($results['data'])),
