@@ -5,7 +5,7 @@ namespace Aldeebhasan\LaravelEventTracker;
 use Aldeebhasan\LaravelEventTracker\Commands\EventInsightsCommand;
 use Aldeebhasan\LaravelEventTracker\Commands\StatisticCommand;
 use Aldeebhasan\LaravelEventTracker\Commands\UserInsightsCommand;
-use Carbon\Laravel\ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 class EventTrackerServiceProvider extends ServiceProvider
 {
