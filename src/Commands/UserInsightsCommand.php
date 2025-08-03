@@ -11,7 +11,7 @@ class UserInsightsCommand extends AbstractCommand
                         {--to= : End date (YYYY-MM-DD)}
                         {--event= : Specific event name}
                         {--user_id= : Specific user id}';
-    public $description = 'Show the event insights for specific/all users within a specific period of time';
+    public $description = 'Show the user insights within a specific period of time';
 
     protected function getResult(): array
     {

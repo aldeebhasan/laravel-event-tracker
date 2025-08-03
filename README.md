@@ -32,6 +32,8 @@ php artisan vendor:publish --tag="event-tracker-config"
 
 ## Usage
 
+### Track events
+
 After the configuration of the target driver you want to use in the config file (log by default),
 you can start track your users with the following helpers
 
@@ -49,6 +51,21 @@ Alternately, you can use the package facade to call all the event tracker manage
 
 ```php
 \Aldeebhasan\LaravelEventTracker\Facades\EventTracker::driver()->track_event("event name");
+```
+### View Statistics & Insights
+
+We have four available commands that can tell you the whole story about your events:
+- <b>event-tracker:frequency</b> : Show the event frequency bases on specific/all users.
+- <b>event-tracker:event-insights</b> : Show the event insights for specific/all events within a specific period of time.
+- <b>event-tracker:statistics</b> : Show general statistics about the events and users.
+- <b>event-tracker:user-insights</b> : Show the user insights within a specific period of time.
+
+all these commands has 4 input options
+```php
+php artisan event-tracker:command --from=   //  Start date (YYYY-MM-DD) and by default is yesterday
+                                  --to=     //  End date (YYYY-MM-DD) and by default is today
+                                  --event=  //  Specific event name to filter on
+                                  --user_id=// Specific user id to filter on     
 ```
 
 ## Testing
