@@ -7,7 +7,7 @@ use Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException;
 use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
 
-class LogTracker implements TrackerUI
+class LogTracker extends AbstractTracker
 {
     private LoggerInterface $channel;
 
@@ -59,10 +59,5 @@ class LogTracker implements TrackerUI
         ]);
 
         return $this;
-    }
-
-    public function statistic(?string $event, ?string $from, ?string $to): array
-    {
-        throw new TrackingException("Statistic are not supported for log tracker right now!!");
     }
 }

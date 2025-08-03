@@ -2,7 +2,9 @@
 
 namespace Aldeebhasan\LaravelEventTracker;
 
+use Aldeebhasan\LaravelEventTracker\Commands\EventInsightsCommand;
 use Aldeebhasan\LaravelEventTracker\Commands\StatisticCommand;
+use Aldeebhasan\LaravelEventTracker\Commands\UserInsightsCommand;
 use Carbon\Laravel\ServiceProvider;
 
 class EventTrackerServiceProvider extends ServiceProvider
@@ -23,9 +25,12 @@ class EventTrackerServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/event-tracker.php', 'event-tracker');
+
         if ($this->app->runningInConsole()) {
             $this->commands([
-                StatisticCommand::class
+                StatisticCommand::class,
+                EventInsightsCommand::class,
+                UserInsightsCommand::class,
             ]);
         }
     }

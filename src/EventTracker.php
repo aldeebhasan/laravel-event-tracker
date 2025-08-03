@@ -8,9 +8,12 @@ use Aldeebhasan\LaravelEventTracker\Factories\EventTrackerDriverFactory;
 use Aldeebhasan\LaravelEventTracker\Jobs\EventTrackerJob;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Conditionable;
 
 class EventTracker
 {
+    use Conditionable;
+
     private string $driver;
 
     /**

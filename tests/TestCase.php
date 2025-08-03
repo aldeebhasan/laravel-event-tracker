@@ -15,6 +15,8 @@ class TestCase extends Orchestra
         Factory::guessFactoryNamesUsing(
             fn(string $modelName) => 'Aldeebhasan\\LaravelEventTracker\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
         );
+
+        $this->loadMigrationsFrom(__DIR__ . '/Sample/database/migrations');
     }
 
     protected function getPackageProviders($app): array

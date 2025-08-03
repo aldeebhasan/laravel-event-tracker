@@ -38,8 +38,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Aldeebhasan\\LaravelEventTracker\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Aldeebhasan\\LaravelEventTracker\\Tests\\": "tests/"
         },
         "files": [
             "src/Helper/helper.php"
@@ -63,7 +62,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "EventTrackerServiceProvider"
+                "Aldeebhasan\\LaravelEventTracker\\EventTrackerServiceProvider"
             ],
             "aliases": {
                 "EventTracker": "Aldeebhasan\\LaravelEventTracker\\Facades\\EventTracker"

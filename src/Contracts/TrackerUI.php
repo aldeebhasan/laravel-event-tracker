@@ -14,4 +14,10 @@ interface TrackerUI
      * @param array<string,mixed> $context
      */
     public function track(array $meta, string $event, array $context = []): void;
+
+    public function getStatistic(string $from, string $to, ?string $event = null, string|int|null $userId = null): array;
+
+    public function getEventInsights(string $from, string $to, ?string $event = null, string|int|null $userId = null): array;
+
+    public function getUserInsights(string $from, string $to, ?string $event = null, string|int|null $userId = null): array;
 }
