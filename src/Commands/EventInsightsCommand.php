@@ -24,8 +24,13 @@ class EventInsightsCommand extends Command
 
         $handler = (new EventTrackerDriverFactory)->getInstance(config('event-tracker.driver'));
 
-        $results = $handler->getEventInsights($from, $to, $event, $userId);
+        try {
+            $results = $handler->getEventInsights($from, $to, $event, $userId);
+        } catch (TrackingException $e) {
+            $this->output->error($e->getMessage());
 
+            return self::FAILURE;
+        }
         $this->output->title($results['title']);
         $this->output->info("Generated at:  {$results['generated_at']} ");
         $this->output->info("Between : {$results['period']['start']} & {$results['period']['end']}");

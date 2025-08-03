@@ -34,15 +34,15 @@
         "psr-4": {
             "Aldeebhasan\\LaravelEventTracker\\": "src/",
             "Aldeebhasan\\LaravelEventTracker\\Database\\Factories\\": "database/factories/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Aldeebhasan\\LaravelEventTracker\\Tests\\": "tests/"
         },
         "files": [
             "src/Helper/helper.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aldeebhasan\\LaravelEventTracker\\Tests\\": "tests/"
+        }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",

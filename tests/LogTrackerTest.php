@@ -57,9 +57,12 @@ it('can track event on queue (async mode)', function () {
 });
 
 it('can retrieve accurate statistics', function () {
-    $this->artisan('event-tracker:statistics');
-})->throws(Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException::class);
+    $this->artisan('event-tracker:statistics')->assertFailed();
+});
 
 it('can retrieve accurate event insights', function () {
-    $this->artisan('event-tracker:event-insights');
-})->throws(Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException::class);
+    $this->artisan('event-tracker:event-insights')->assertFailed();
+});
+it('can retrieve accurate user insights', function () {
+    $this->artisan('event-tracker:user-insights')->assertFailed();
+});

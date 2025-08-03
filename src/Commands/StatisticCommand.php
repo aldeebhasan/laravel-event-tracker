@@ -24,7 +24,13 @@ class StatisticCommand extends Command
 
         $handler = (new EventTrackerDriverFactory)->getInstance(config('event-tracker.driver'));
 
-        $results = $handler->getStatistic($from, $to, $event, $userId);
+        try {
+            $results = $handler->getStatistic($from, $to, $event, $userId);
+        } catch (TrackingException $e) {
+            $this->output->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         $this->output->title($results['title']);
         $this->output->info("Generated at:  {$results['generated_at']} ");

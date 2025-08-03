@@ -24,19 +24,23 @@ class UserInsightsCommand extends Command
 
         $handler = (new EventTrackerDriverFactory)->getInstance(config('event-tracker.driver'));
 
-        $results = $handler->getUserInsights($from, $to, $event, $userId);
+        try {
+            $results = $handler->getUserInsights($from, $to, $event, $userId);
+        } catch (TrackingException $e) {
+            $this->output->error($e->getMessage());
 
+            return self::FAILURE;
+        }
         $this->output->title($results['title']);
-        $this->output->info("Generated at:  {$results['generated_at']} ");
-        $this->output->info("Between : {$results['period']['start']} & {$results['period']['end']}");
-        $this->output->info("-------------------------------");
-        $this->output->info("Top 3 events");
+        $this->output->text("Generated at:  {$results['generated_at']} ");
+        $this->output->text("Between : {$results['period']['start']} & {$results['period']['end']}");
+        $this->output->section("Top 3 events");
         $this->table(
             ["Event", 'Count'],
             array_map(fn($value, $key) => [$key, $value], $results['data']['top_3_users'], array_keys($results['data']['top_3_users'])),
         );
 
-        $this->output->info("User Insights");
+        $this->output->section("User Insights");
         $this->table(
             ["Day", 'Events'],
             array_map(fn($value, $key) => [$key, implode('\n', $value)], $results['data']['by_days'], array_keys($results['data']['by_days'])),

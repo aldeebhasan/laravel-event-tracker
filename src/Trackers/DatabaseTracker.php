@@ -105,7 +105,7 @@ class DatabaseTracker extends AbstractTracker
         $statistics = $this->bseQuery($event, $userId)->select([
             'trackable_id', 'trackable_type',
             'total_events' => DB::raw('count(event) as total_events'),
-        ])->groupBy('event')->orderByDesc('total_events')->limit(3)->get();
+        ])->groupBy(['trackable_type', 'trackable_id'])->orderByDesc('total_events')->limit(3)->get();
 
         $classShortName = function (?string $class, string|int|null $key) {
             if (!$class) {
