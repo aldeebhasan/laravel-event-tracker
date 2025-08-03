@@ -30,10 +30,12 @@ class DatabaseTracker extends AbstractTracker
         return new self;
     }
 
-    private function bseQuery(?string $event, string|int|null $userId): Builder
+    private function bseQuery(?string $from, ?string $to, ?string $event, string|int|null $userId): Builder
     {
         return DB::connection((new EventTracker)->getConnectionName())
             ->table((new EventTracker)->getTable())
+            ->when($from, fn(Builder $q) => $q->whereDate('date', '>=', $from))
+            ->when($to, fn(Builder $q) => $q->whereDate('date', '<=', $to))
             ->when($event, fn(Builder $q) => $q->where('event', $event))
             ->when($userId, fn(Builder $q) => $q->where('trackable_id', $userId));
     }
@@ -61,7 +63,7 @@ class DatabaseTracker extends AbstractTracker
 
     public function getStatistic(string $from, string $to, ?string $event = null, string|int|null $userId = null): array
     {
-        $statistics = $this->bseQuery($event, $userId)->select([
+        $statistics = $this->bseQuery($from, $to, $event, $userId)->select([
             'total_events' => DB::raw('count(event) as total_events'),
             'unique_events_count' => DB::raw('count(DISTINCT event ) as unique_events_count'),
             'total_users' => DB::raw('count(trackable_id) as total_users'),
@@ -75,7 +77,7 @@ class DatabaseTracker extends AbstractTracker
 
     public function getEventInsights(string $from, string $to, ?string $event = null, string|int|null $userId = null): array
     {
-        $statistics = $this->bseQuery($event, $userId)->select([
+        $statistics = $this->bseQuery($from, $to, $event, $userId)->select([
             'event',
             'total_events' => DB::raw('count(event) as total_events'),
         ])->groupBy('event')->orderByDesc('total_events')->limit(3)->get();
@@ -84,7 +86,7 @@ class DatabaseTracker extends AbstractTracker
             $statistic->event => $statistic->total_events,
         ])->toArray();
 
-        $statistics = $this->bseQuery($event, $userId)->select([
+        $statistics = $this->bseQuery($from, $to, $event, $userId)->select([
             'date', 'event',
             'total_events' => DB::raw('count(event) as total_events'),
         ])->groupBy(['date', 'event'])->orderBy('date')->get();
@@ -102,7 +104,7 @@ class DatabaseTracker extends AbstractTracker
 
     public function getUserInsights(string $from, string $to, ?string $event = null, string|int|null $userId = null): array
     {
-        $statistics = $this->bseQuery($event, $userId)->select([
+        $statistics = $this->bseQuery($from, $to, $event, $userId)->select([
             'trackable_id', 'trackable_type',
             'total_events' => DB::raw('count(event) as total_events'),
         ])->groupBy(['trackable_type', 'trackable_id'])->orderByDesc('total_events')->limit(3)->get();
@@ -122,7 +124,7 @@ class DatabaseTracker extends AbstractTracker
             $classShortName($statistic->trackable_type, $statistic->trackable_id) => $statistic->total_events,
         ])->toArray();
 
-        $statistics = $this->bseQuery($event, $userId)->select([
+        $statistics = $this->bseQuery($from, $to, $event, $userId)->select([
             'date', 'trackable_id', 'trackable_type',
             'total_events' => DB::raw('count(event) as total_events'),
         ])->groupBy(['date', 'trackable_type', 'trackable_id'])->orderBy('date')->get();
@@ -136,5 +138,21 @@ class DatabaseTracker extends AbstractTracker
         $title = $this->getReportTitle("User Insights", $event, $userId);
 
         return $this->template($title, $from, $to, $data);
+    }
+
+    public function getEventFrequency(string $from, string $to, ?string $event = null, string|int|null $userId = null): array
+    {
+        $statistics = $this->bseQuery($from, $to, $event, $userId)->select([
+            'event',
+            'total_events' => DB::raw('count(event) as total_events'),
+        ])->groupBy('event')->orderByDesc('total_events')
+            ->get()
+            ->mapWithKeys(fn(object $statistic) => [
+                $statistic->event => $statistic->total_events,
+            ])->toArray();
+
+        $title = $this->getReportTitle("Events Frequency ", $event, $userId);
+
+        return $this->template($title, $from, $to, (array)$statistics);
     }
 }

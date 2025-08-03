@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static \Aldeebhasan\LaravelEventTracker\EventTracker driver(string $driver = '')
  * @method static \Aldeebhasan\LaravelEventTracker\EventTracker user(Authenticatable|Model $user)
- * @method static void track(string $event, array $context = [])
+ * @method static void track_event(string $event, array $context = [])
  *
  * @see \Aldeebhasan\LaravelEventTracker\LaravelEventTracker
  */

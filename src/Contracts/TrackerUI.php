@@ -20,4 +20,6 @@ interface TrackerUI
     public function getEventInsights(string $from, string $to, ?string $event = null, string|int|null $userId = null): array;
 
     public function getUserInsights(string $from, string $to, ?string $event = null, string|int|null $userId = null): array;
+
+    public function getEventFrequency(string $from, string $to, ?string $event = null, string|int|null $userId = null): array;
 }

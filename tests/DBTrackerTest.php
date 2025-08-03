@@ -3,7 +3,7 @@
 use Aldeebhasan\LaravelEventTracker\Factories\EventTrackerDriverFactory;
 
 it('can track event (DB)', function () {
-    tracker('database')->track('action.created');
+    tracker('database')->track_event('action.created');
     $count = Aldeebhasan\LaravelEventTracker\Models\EventTracker::count();
 
     expect($count)->toBe(1);
@@ -13,7 +13,7 @@ it('can track event on queue (sync mode) (DB)', function () {
     config()->set('event-tracker.queue.enabled', true);
     config()->set('event-tracker.queue.connection', 'sync');
 
-    tracker('database')->track('action.created');
+    tracker('database')->track_event('action.created');
     $count = Aldeebhasan\LaravelEventTracker\Models\EventTracker::count();
 
     expect($count)->toBe(1);
@@ -24,7 +24,7 @@ it('can track event on queue (async mode) (DB)', function () {
     config()->set('event-tracker.queue.enabled', true);
     config()->set('event-tracker.queue.connection', 'database');
 
-    tracker('database')->track('action.created');
+    tracker('database')->track_event('action.created');
     Illuminate\Support\Facades\Queue::assertPushed(
         Aldeebhasan\LaravelEventTracker\Jobs\EventTrackerJob::class,
         function (Aldeebhasan\LaravelEventTracker\Jobs\EventTrackerJob $job) {

@@ -2,35 +2,26 @@
 
 namespace Aldeebhasan\LaravelEventTracker\Commands;
 
-use Aldeebhasan\LaravelEventTracker\Exceptions\TrackingException;
 use Aldeebhasan\LaravelEventTracker\Factories\EventTrackerDriverFactory;
-use Carbon\Carbon;
-use Illuminate\Console\Command;
 
-class UserInsightsCommand extends Command
+class UserInsightsCommand extends AbstractCommand
 {
-    public $signature = 'event-tracker:user-insights  {--from=} {--to=} {--event=} {--user_id=}';
-    public $description = 'My command';
+    public $signature = 'event-tracker:user-insights
+                        {--from= : Start date (YYYY-MM-DD)}
+                        {--to= : End date (YYYY-MM-DD)}
+                        {--event= : Specific event name}
+                        {--user_id= : Specific user id}';
+    public $description = 'Show the event insights for specific/all users within a specific period of time';
 
-    /**
-     * @throws TrackingException
-     */
-    public function handle(): int
+    protected function getResult(): array
     {
-        $userId = $this->option('user_id');
-        $event = $this->option('event');
-        $from = Carbon::parse($this->option('from') ?? now()->subDay())->startOfDay()->toDateString();
-        $to = Carbon::parse($this->option('to') ?? now())->endOfDay()->toDateString();
-
         $handler = (new EventTrackerDriverFactory)->getInstance(config('event-tracker.driver'));
 
-        try {
-            $results = $handler->getUserInsights($from, $to, $event, $userId);
-        } catch (TrackingException $e) {
-            $this->output->error($e->getMessage());
+        return $handler->getUserInsights($this->from, $this->to, $this->event, $this->userId);
+    }
 
-            return self::FAILURE;
-        }
+    protected function handleOutput(array $results): void
+    {
         $this->output->title($results['title']);
         $this->output->text("Generated at:  {$results['generated_at']} ");
         $this->output->text("Between : {$results['period']['start']} & {$results['period']['end']}");
@@ -40,16 +31,18 @@ class UserInsightsCommand extends Command
             array_map(fn($value, $key) => [$key, $value], $results['data']['top_3_users'], array_keys($results['data']['top_3_users'])),
         );
 
-        $this->output->section("User Insights");
-        $this->table(
-            ["Day", 'Users'],
-            array_map(
-                fn($key, $value) => [$key, collect($value)->map(fn($val, $key) => "$key: $val")->implode(', ')],
-                array_keys($results['data']['by_days']),
-                $results['data']['by_days']
-            ),
-        );
+        $rows = collect($results['data']['by_days'])->map(function ($items, $key) {
+            $results = [];
+            $day = $key;
+            foreach ($items as $user => $count) {
+                $results[] = [$day, $user, $count];
+                $day = '';
+            }
 
-        return self::SUCCESS;
+            return $results;
+        })->collapse();
+
+        $this->output->section("User Insights");
+        $this->table(["Day", 'User', 'Count'], $rows);
     }
 }

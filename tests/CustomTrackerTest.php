@@ -16,7 +16,7 @@ beforeEach(function () {
 });
 
 it('can track event (Custom)', function () {
-    tracker('custom')->track('action.created');
+    tracker('custom')->track_event('action.created');
     $path = config('event-tracker.drivers.custom.path');
 
     $exist = file_exists($path);
@@ -30,7 +30,7 @@ it('can track event on queue (sync mode)', function () {
     config()->set('event-tracker.queue.enabled', true);
     config()->set('event-tracker.queue.connection', 'sync');
 
-    tracker('custom')->track('action.created');
+    tracker('custom')->track_event('action.created');
     $path = config('event-tracker.drivers.custom.path');
 
     $exist = file_exists($path);
@@ -45,7 +45,7 @@ it('can track event on queue (async mode)', function () {
     config()->set('event-tracker.queue.enabled', true);
     config()->set('event-tracker.queue.connection', 'database');
 
-    tracker('custom')->track('action.created');
+    tracker('custom')->track_event('action.created');
     Illuminate\Support\Facades\Queue::assertPushed(
         Aldeebhasan\LaravelEventTracker\Jobs\EventTrackerJob::class,
         function (Aldeebhasan\LaravelEventTracker\Jobs\EventTrackerJob $job) {

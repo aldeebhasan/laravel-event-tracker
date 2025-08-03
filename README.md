@@ -6,15 +6,8 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/04af7fd269044247b9d5330e0b7e56a2)](https://app.codacy.com/gh/aldeebhasan/laravel-event-tracker/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Total Downloads](https://img.shields.io/packagist/dt/aldeebhasan/laravel-event-tracker.svg?style=flat-square)](https://packagist.org/packages/aldeebhasan/laravel-event-tracker)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-event-tracker.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-event-tracker)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+A simple and flexible Laravel package for tracking events in your application. The laravel-event-tracker package provides an intuitive helper function to log events with minimal setup, abstracting the
+complexity of event storage and retrieval. It supports multiple drivers (e.g., database, log) and includes Artisan commands to retrieve insightful statistics about your events.
 
 ## Installation
 
@@ -24,37 +17,38 @@ You can install the package via composer:
 composer require aldeebhasan/laravel-event-tracker
 ```
 
-You can publish and run the migrations with:
+You need first to publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-event-tracker-migrations"
+php artisan vendor:publish --tag="event-tracker-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-event-tracker-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-event-tracker-views"
+php artisan vendor:publish --tag="event-tracker-config"
 ```
 
 ## Usage
 
+After the configuration of the target driver you want to use in the config file (log by default),
+you can start track your users with the following helpers
+
 ```php
-$laravelEventTracker = new aldeebhasan\LaravelEventTracker();
-echo $laravelEventTracker->echoPhrase('Hello, Hasan Deeb!');
+track_event(event:"event name",context: [],user: auth()->user())
+```
+
+if you want to use different driver at run time, you can use the tracker helper to configure it.
+
+```php
+tracker('database')->track_event(event:"event name",context: [],user: auth()->user())
+```
+
+Alternately, you can use the package facade to call all the event tracker manager functions
+
+```php
+\Aldeebhasan\LaravelEventTracker\Facades\EventTracker::driver()->track_event("event name");
 ```
 
 ## Testing
@@ -66,10 +60,6 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 

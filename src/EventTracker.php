@@ -49,7 +49,7 @@ class EventTracker
      *
      * @throws TrackingException
      */
-    public function track(string $event, array $context = []): void
+    public function track_event(string $event, array $context = []): void
     {
         $enabled = config('event-tracker.enabled', false);
         if (!$enabled) {

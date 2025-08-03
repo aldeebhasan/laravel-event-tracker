@@ -24,4 +24,9 @@ abstract class AbstractTracker implements TrackerUI
     {
         throw new TrackingException("User Insights are not supported for current driver right now!!");
     }
+
+    public function getEventFrequency(string $from, string $to, ?string $event = null, string|int|null $userId = null): array
+    {
+        throw new TrackingException("Event Frequency isnot supported for current driver right now!!");
+    }
 }

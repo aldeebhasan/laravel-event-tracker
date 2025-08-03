@@ -18,7 +18,7 @@ class EventTrackerFactory extends Factory
         return [
             'event' => $this->faker->randomElement($events),
             'context' => [],
-            'date' => now()->subHours($this->faker->numberBetween(int2: 200))->toDateString(),
+            'date' => now()->addHours($this->faker->numberBetween(int2: 200))->toDateString(),
             'ip_address' => $this->faker->ipv4(),
             'user_agent' => $this->faker->userAgent(),
             'tags' => '',

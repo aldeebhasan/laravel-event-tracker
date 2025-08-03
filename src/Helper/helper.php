@@ -13,6 +13,6 @@ if (!function_exists('tracker')) {
 if (!function_exists('track_event')) {
     function track_event(string $event, array $context = [], Authenticatable|Model|null $user = null): void
     {
-        tracker()->when($user, fn($tracker) => $tracker->user($user))->track($event, $context);
+        tracker()->when($user, fn($tracker) => $tracker->user($user))->track_event($event, $context);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Aldeebhasan\LaravelEventTracker;
 
+use Aldeebhasan\LaravelEventTracker\Commands\EventFrequencyCommand;
 use Aldeebhasan\LaravelEventTracker\Commands\EventInsightsCommand;
 use Aldeebhasan\LaravelEventTracker\Commands\StatisticCommand;
 use Aldeebhasan\LaravelEventTracker\Commands\UserInsightsCommand;
@@ -13,13 +14,13 @@ class EventTrackerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/event-tracker.php' => config_path('event-tracker.php'),
-        ], 'tracker-config');
+        ], 'event-tracker-config');
 
         $this->publishes([
             __DIR__ . '/../database/migrations/event_tracker.stub' => database_path(
                 sprintf('migrations/%s_create_event_tracker_table.php', date('Y_m_d_His'))
             ),
-        ], 'tracker-migrations');
+        ], 'event-tracker-migrations');
     }
 
     public function register(): void
@@ -31,6 +32,7 @@ class EventTrackerServiceProvider extends ServiceProvider
                 StatisticCommand::class,
                 EventInsightsCommand::class,
                 UserInsightsCommand::class,
+                EventFrequencyCommand::class,
             ]);
         }
     }
