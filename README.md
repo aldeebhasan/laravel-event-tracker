@@ -90,7 +90,7 @@ Then you can use the tracker as follow
 ```php
   tracker('custom')->track_event('action.created');
 ```
-> [!INFO]
+> [!IMPORTANT]
 > The `CustomTracker` should implement the `TrackerUI` interface
 
 ### Additional Resolvers
@@ -110,7 +110,7 @@ class HostResolver implements ResolveUI
 }
 ```
 
-> [!INFO]
+> [!IMPORTANT]
 > The new resolver should implement the `ResolveUI` interface
 
 The new resolver data will be passed within the $meta param within the `track` function in all of the tracker implementation. 
