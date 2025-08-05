@@ -22,7 +22,8 @@ class DatabaseTracker extends AbstractTracker
             'trackable_id' => !empty($meta['user']) ? $meta['user']->getKey() : null,
             'tags' => '',
         ];
-        EventTracker::create($data);
+        $model = config('event-tracker.implementation', EventTracker::class);
+        $model::create($data);
     }
 
     public function initialize(array $config): TrackerUI
@@ -32,8 +33,10 @@ class DatabaseTracker extends AbstractTracker
 
     private function bseQuery(?string $from, ?string $to, ?string $event, string|int|null $userId): Builder
     {
-        return DB::connection((new EventTracker)->getConnectionName())
-            ->table((new EventTracker)->getTable())
+        $model = config('event-tracker.implementation', EventTracker::class);
+
+        return DB::connection((new $model)->getConnectionName())
+            ->table((new $model)->getTable())
             ->when($from, fn(Builder $q) => $q->whereDate('date', '>=', $from))
             ->when($to, fn(Builder $q) => $q->whereDate('date', '<=', $to))
             ->when($event, fn(Builder $q) => $q->where('event', $event))
