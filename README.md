@@ -68,6 +68,53 @@ php artisan event-tracker:command --from=   //  Start date (YYYY-MM-DD) and by d
                                   --user_id=// Specific user id to filter on     
 ```
 
+## Advanced Setup
+
+### Custom Tracker
+After publishing of the config, you have the ability to change the default trackers implementation, or add your custom tracker.
+to configure your custom tracker you can define it in the config file as follow:
+```php
+    'drivers' => [
+        /*'database' => [
+            'table' => 'events',
+            'connection' => 'mysql',
+        ],*/
+         'custom' => [
+            'implementation' => YourProject\Trackers\CustomTracker::class,
+            'api-key' => '***********',
+            'project' => '***********',
+        ],
+    ],
+```
+Then you can use the tracker as follow 
+```php
+  tracker('custom')->track_event('action.created');
+```
+> [!INFO]
+> The `CustomTracker` should implement the `TrackerUI` interface
+
+### Additional Resolvers
+
+In the config file you have a resolver array that contain all the resolver applied on the incoming request to extract data from it.
+If you want to extract extra info from the current request you can create a new resolver class and add it to the resolver list.
+
+As example:
+let create a new resolver to extract the host from the request:
+```php
+class HostResolver implements ResolveUI
+{
+    public static function resolve(EventTracker $tracker): string
+    {
+        return $tracker->preloadedResolverData['host'] ?? (request()->getHost() ?? '');
+    }
+}
+```
+
+> [!INFO]
+> The new resolver should implement the `ResolveUI` interface
+
+The new resolver data will be passed within the $meta param within the `track` function in all of the tracker implementation. 
+
 ## Testing
 
 ```bash

@@ -23,7 +23,6 @@ return [
             'project' => 'tracker',
         ],
         */
-
     ],
 
     'user' => [
